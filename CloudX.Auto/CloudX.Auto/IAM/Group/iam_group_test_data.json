@@ -1,0 +1,19 @@
+﻿{
+  "AWSEntriesModel": {
+    "AWSEntries": [
+      {
+        "Name": "FullAccessGroupEC2",
+        "Values": [ "FullAccessPolicyEC2" ]
+
+      },
+      {
+        "Name": "FullAccessGroupS3",
+        "Values": [ "FullAccessPolicyS3" ]
+      },
+      {
+        "Name": "ReadAccessGroupS3",
+        "Values": [ "ReadAccessPolicyS3" ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,28 @@
+﻿{
+  "PoliciesModel": {
+    "Policies": [
+      {
+        "Name": "FullAccessPolicyEC2",
+        "Action": [ "ec2:*" ],
+        "Resource": "*",
+        "Effect": "Allow"
+      },
+      {
+        "Name": "FullAccessPolicyS3",
+        "Action": [ "s3:*" ],
+        "Resource": "*",
+        "Effect": "Allow"
+      },
+      {
+        "Name": "ReadAccessPolicyS3",
+        "Action": [
+          "s3:Describe*",
+          "s3:Get*",
+          "s3:List*"
+        ],
+        "Resource": "*",
+        "Effect": "Allow"
+      }
+    ]
+  }
+}
