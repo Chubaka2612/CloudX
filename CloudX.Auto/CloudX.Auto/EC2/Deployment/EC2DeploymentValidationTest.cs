@@ -67,24 +67,22 @@ namespace CloudX.Auto.Tests.EC2.Deployment
                 "Verify platform details of instance are correct"),
                 () => AssertHelper.AreEquals(volume.Result.Volumes[0].Size, expectedInstanceTestDataModel.DeviceSizeGb,
                 "Verify Root Block Device Size of instance is correct"),
-                () => AssertHelper.IsTrue(expectedInstanceTestDataModel.IsPublic && instance.PublicIpAddress != null,
+                () => AssertHelper.AreEquals(expectedInstanceTestDataModel.IsPublic, instance.PublicIpAddress != null,
                 $"Verify public ip address is assigned: {expectedInstanceTestDataModel.IsPublic} on instanse isPublic: {expectedInstanceTestDataModel.IsPublic} ")
                 );
         }
 
         [Test]
         [Component(ComponentName.CloudX_EC2)]
+        [TestCaseSource(nameof(EC2InstanceTestDataSource))]
         [Category(TestType.Regression)]
         [TestCode("CXQA-EC2-03")]
-        public async Task EC2PublicInstanceShouldHaveCorrectSecurityGroupConfigured()
+        public async Task EC2InstanceShouldHaveCorrectSecurityGroupConfigured(EC2InstanceModel expectedInstanceTestDataModel)
         {
-            var publicInstanceTestData = ConfigurationManager.Get<EC2InstancesModel>(nameof(EC2InstancesModel),
-               testDataFilePath).EC2Instances.Where(instance => instance.IsPublic).First();
-
             var instance = EC2Service.Instance.ListInstancesAsync().Result.ToList()
-                             .FirstOrDefault(instance => instance.InstanceId == publicInstanceTestData.Id)
+                             .FirstOrDefault(instance => instance.InstanceId == expectedInstanceTestDataModel.Id)
                          ?? throw new ArgumentException(
-                             $"No instance with id '{publicInstanceTestData.Id}' was found in InstanceList");
+                             $"No instance with id '{expectedInstanceTestDataModel.Id}' was found in InstanceList");
 
             //retrieve security group assigned to the public instance
             var securityGroupAssignedToInstance = instance.SecurityGroups.Where(group => group.GroupName.Contains(appName));
@@ -120,6 +118,5 @@ namespace CloudX.Auto.Tests.EC2.Deployment
                 "Verify public instance is accessible from the internet SSH (port 22)")
                 );
         }
-
     }
 }

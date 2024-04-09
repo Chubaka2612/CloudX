@@ -2,8 +2,8 @@
   "EC2InstancesModel": {
     "EC2Instances": [
       {
-        "Id": "i-03bcf4be4b436f17f",
-        "Ip": "3.79.167.190",
+        "Id": "i-001cdd4a3ee7ddb07",
+        "Ip": "3.68.158.151",
         "Tags": [ "cloudx:qa" ],
         "Type": "t2.micro",
         "DeviceSizeGb": 8,
@@ -11,7 +11,7 @@
         "IsPublic": true
       },
       {
-        "Id": "",
+        "Id": "i-09357e5398df63b48",
         "Ip": "",
         "Tags": [ "cloudx:qa" ],
         "Type": "t2.micro",
