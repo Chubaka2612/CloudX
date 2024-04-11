@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Amazon.EC2;
 using Amazon.EC2.Model;
@@ -66,12 +67,80 @@ namespace CloudX.Auto.AWS.Core.Domain.EC2
 
         public async Task<List<SecurityGroup>> ListSecurityGroupsAsync(string groupId)
         {
-            var request = new DescribeSecurityGroupsRequest();
-            var groupIds = new List<string> { groupId };
-            request.GroupIds = groupIds;
+            var request = new DescribeSecurityGroupsRequest
+            {
+                GroupIds = new List<string> { groupId }
+            };
 
             var response = await _ec2Service.DescribeSecurityGroupsAsync(request);
             return response.SecurityGroups;
+        }
+
+        public async Task<List<Vpc>> ListVpcsAsync(string vpcId)
+        {
+            var request = new DescribeVpcsRequest
+            {
+                VpcIds = new List<string> { vpcId }
+            };
+
+            var response = await _ec2Service.DescribeVpcsAsync(request);
+            return response.Vpcs;
+        }
+
+        public async Task<List<Subnet>> ListVpcSubnetsAsync(string vpcId)
+        {
+            var request = new DescribeSubnetsRequest
+            {
+                Filters = new List<Filter>
+                {
+                    new Filter { Name = "vpc-id", Values = new List<string> { vpcId } }
+                }
+            };
+
+            var response = await _ec2Service.DescribeSubnetsAsync(request);
+            return response.Subnets;
+        }
+
+        public async Task<List<Subnet>> ListVpcSubnetsByInstanceIdAsync(string instanceId)
+        {
+            var describeNetworkInterfacesRequest = new DescribeNetworkInterfacesRequest
+            {
+                Filters = new List<Filter>
+                {
+                    new Filter { Name = "attachment.instance-id", Values = new List<string> { instanceId } }
+                }
+            };
+
+            var describeNetworkInterfacesResponse = await _ec2Service.DescribeNetworkInterfacesAsync(describeNetworkInterfacesRequest);
+
+            // Get the subnet IDs associated with the network interfaces
+            var subnetIds = describeNetworkInterfacesResponse.NetworkInterfaces.Select(ni => ni.SubnetId).ToList();
+
+            // Describe the subnets using the subnet IDs
+            var describeSubnetsRequest = new DescribeSubnetsRequest
+            {
+                Filters = new List<Filter>
+                {
+                    new Filter { Name = "subnet-id", Values = subnetIds }
+                }
+            };
+
+            var describeSubnetsResponse = await _ec2Service.DescribeSubnetsAsync(describeSubnetsRequest);
+            return describeSubnetsResponse.Subnets;
+        }
+
+        public async Task<List<RouteTable>> ListVpcSubnetsRoutTablesAsync(string subnetId)
+        {
+            var describeRouteTablesRequest = new DescribeRouteTablesRequest
+            {
+                Filters = new List<Filter>
+                        {
+                            new Filter { Name = "association.subnet-id", Values = new List<string> { subnetId } }
+                        }
+            };
+
+            var response = await _ec2Service.DescribeRouteTablesAsync(describeRouteTablesRequest);
+            return response.RouteTables;
         }
     }
 }
