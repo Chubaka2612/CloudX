@@ -10,7 +10,7 @@ using CloudX.Auto.Core.Utils;
 using CloudX.Auto.Tests.TestData.Model;
 using NUnit.Framework;
 
-namespace CloudX.Auto.Tests.EC2.Deployment
+namespace CloudX.Auto.Tests.VPC.Deployment
 {
     public class VPCDeploymentValidationTest : BaseTest
     {
@@ -136,6 +136,8 @@ namespace CloudX.Auto.Tests.EC2.Deployment
             //from the public internet (0.0.0.0/0 CIDR block).
             var securityGroups = instance.SecurityGroups;
             bool allowsPublicInbound = false;
+            
+            AssertHelper.IsTrue(securityGroups.Count != 0, "Verify security groups are assigned on private instance");
 
             foreach (var securityGroup in securityGroups)
             {

@@ -11,7 +11,7 @@
         "IsPublic": true
       },
       {
-        "Id": "i-0433c34e38105f872",
+        "Id": "i-06f1b495b45727ed6",
         "Ip": "",
         "Tags": [ "cloudx:qa" ],
         "Type": "t2.micro",
