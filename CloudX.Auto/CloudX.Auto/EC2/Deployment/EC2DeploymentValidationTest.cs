@@ -113,9 +113,10 @@ namespace CloudX.Auto.Tests.EC2.Deployment
             }
 
             AssertHelper.AssertScope(
-                () => AssertHelper.IsTrue(httpAccessable, "Verify public instance is accessible from the internet HTTP (port 80)"),
-                 () => AssertHelper.IsTrue(sshAccessable,
-                "Verify public instance is accessible from the internet SSH (port 22)")
+                () => AssertHelper.AreEquals(httpAccessable, expectedInstanceTestDataModel.IsPublic,
+                $"Verify instance public: {expectedInstanceTestDataModel.IsPublic} is accessible from the internet HTTP (port 80): {expectedInstanceTestDataModel.IsPublic}"),
+                () => AssertHelper.AreEquals(sshAccessable, expectedInstanceTestDataModel.IsPublic,
+               $"Verify instance public: {expectedInstanceTestDataModel.IsPublic} is accessible from the internet SHH (port 22): {expectedInstanceTestDataModel.IsPublic}")
                 );
         }
     }
