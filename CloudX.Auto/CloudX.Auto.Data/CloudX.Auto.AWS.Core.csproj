@@ -8,6 +8,7 @@
 		<PackageReference Include="AWSSDK.EC2" Version="3.7.322.1" />
 		<PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.300" />
 		<PackageReference Include="AWSSDK.IdentityManagement" Version="3.7.300.60" />
+		<PackageReference Include="AWSSDK.S3" Version="3.7.307.16" />
 	</ItemGroup>
 
 	<ItemGroup>

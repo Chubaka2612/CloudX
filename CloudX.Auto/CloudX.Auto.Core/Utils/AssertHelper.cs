@@ -71,16 +71,18 @@ namespace CloudX.Auto.Core.Utils
 
         public static void CollectionEquals<T>(IList<T> actual, IList<T> expected, string message = default)
         {
-            if (!string.IsNullOrEmpty(message))
-            {
-                Logger.Info(message + $"\nExpected: {expected.ToJoinString()}" +
-                            $"\nActual  : {actual.ToJoinString()}");
-            }
+        
             var first = actual as T[] ?? actual.ToArray();
             var second = expected as T[] ?? expected.ToArray();
             var result = first.OrderBy(i => i).SequenceEqual(second.OrderBy(i => i));
             AssertAction($"Check that collection '{string.Join(", ", first)}' equals to '{string.Join(", ", second)}'",
                 result);
+
+            if (!string.IsNullOrEmpty(message))
+            {
+                Logger.Info(message + $"\nExpected: {expected.ToJoinString()}" +
+                            $"\nActual  : {actual.ToJoinString()}");
+            }
         }
 
         public static void CollectionIsNotEmpty<T>(IList<T> set, string message = default)
@@ -213,5 +215,7 @@ namespace CloudX.Auto.Core.Utils
             IsFalse(actualString.Contains(expectedString), $"Check string '{actualString}' doesn't contain '{expectedString}'");
             return actualString;
         }
+
+
     }
 }
