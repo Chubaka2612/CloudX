@@ -31,7 +31,7 @@ namespace CloudX.Auto.Tests.S3.Deployment
         protected string apiEndpoint = ConfigurationManager.GetConfiguration(s3TestDataFilePath)["BaseApiEndpoint"];
         protected RestClient client;
 
-         [SetUp]
+        [SetUp]
         protected void BeforeEach()
         {
             Log.Debug("Initialize Rest client");
@@ -41,7 +41,7 @@ namespace CloudX.Auto.Tests.S3.Deployment
         [Test]
         [Component(ComponentName.CloudX_S3)]
         [Category(TestType.Regression)]
-        [TestCode("CXQA-S3-03")]
+        [TestCode("CXQA-S3-05")]
         [Order(1)]
         public async Task S3ViewListOfUploadedImages()
         {
@@ -101,7 +101,7 @@ namespace CloudX.Auto.Tests.S3.Deployment
             //s3 action
             var s3BucketObjectsListAfterUpload = await S3Service.Instance.ListS3ObjectsByKey(bucketId, buckePrefix);
 
-            AssertHelper.AreEquals(s3BucketObjectsListBeforeUpload.Count + 1 , s3BucketObjectsListAfterUpload.Count,
+            AssertHelper.AreEquals(s3BucketObjectsListAfterUpload.Count, s3BucketObjectsListBeforeUpload.Count + 1,
                 $"Veriy POST {postResponse.ResponseUri} added the resourse and size of s3 objects list was increased");
             AssertHelper.IsTrue(s3BucketObjectsListAfterUpload.Any(s3Object => s3Object.Key.Contains(fileNameToUpload)),
                 $"Verify file with a proper name: '{fileNameToUpload}' was uploaded");
@@ -111,6 +111,34 @@ namespace CloudX.Auto.Tests.S3.Deployment
         [Component(ComponentName.CloudX_S3)]
         [Category(TestType.Regression)]
         [TestCode("CXQA-S3-03")]
+        public async Task S3UploadImageWithTheSameNameToS3Bucket()
+        {
+            var imageName = "s3_test_photo.jpg";
+            var filePath = "S3\\Resources";
+
+            //s3 action
+            var s3BucketObjectsListBeforeUpload = await S3Service.Instance.ListS3ObjectsByKey(bucketId, buckePrefix);
+
+            //api action
+            var postRequest = new RestRequest(apiEndpoint, Method.Post)
+            {
+                AlwaysMultipartFormData = true
+            };
+            postRequest.AddHeader("Content-Type", "multipart/form-data");
+            postRequest.AddFile("upfile", () => File.OpenRead(Path.Combine(filePath, imageName)), imageName);
+            var postResponse1 = client.Execute(postRequest);//1st POST
+            var postResponse2 = client.Execute(postRequest);//2nd POST with the same parameters
+            //s3 action
+            var s3BucketObjectsListAfterUpload = await S3Service.Instance.ListS3ObjectsByKey(bucketId, buckePrefix);
+
+            AssertHelper.AreEquals(s3BucketObjectsListAfterUpload.Count, s3BucketObjectsListBeforeUpload.Count + 2,
+                $"Veriy POST {postResponse1.ResponseUri} added the resourse and size of s3 objects list was increased");
+        }
+
+        [Test]
+        [Component(ComponentName.CloudX_S3)]
+        [Category(TestType.Regression)]
+        [TestCode("CXQA-S3-06")]
         public async Task S3DeleteImageFromS3Bucket()
         {
             var imageName = "s3_test_photo.jpg";
@@ -134,7 +162,7 @@ namespace CloudX.Auto.Tests.S3.Deployment
             //s3 action
             var s3BucketObjectsListAfterDeletion = await S3Service.Instance.ListS3ObjectsByKey(bucketId, buckePrefix);
 
-            AssertHelper.AreEquals(s3BucketObjectsListBeforeDeletion.Count - 1, s3BucketObjectsListAfterDeletion.Count,
+            AssertHelper.AreEquals(s3BucketObjectsListAfterDeletion.Count, s3BucketObjectsListBeforeDeletion.Count - 1,
               $"Veriy DELETE {deleteResponse.ResponseUri} removed the resourse and size of s3 objects list was decreased");
             AssertHelper.IsFalse(s3BucketObjectsListAfterDeletion.Any(s3Object => s3Object.Key.Contains(fileNameToUpload)),
               $"Verify file with a proper name: '{fileNameToUpload}' was deleted");
@@ -143,7 +171,7 @@ namespace CloudX.Auto.Tests.S3.Deployment
         [Test]
         [Component(ComponentName.CloudX_S3)]
         [Category(TestType.Regression)]
-        [TestCode("CXQA-S3-03")]
+        [TestCode("CXQA-S3-04")]
         public async Task S3DownloadImageFromS3Bucket()
         {
             var imageName = "s3_test_photo.jpg";
