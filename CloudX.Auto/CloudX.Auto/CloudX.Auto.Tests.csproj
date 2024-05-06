@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <StartupObject></StartupObject>
     <ApplicationIcon />
+    <UserSecretsId>d742dee5-636b-4aff-8ff4-eeaa150a81ef</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,8 +15,12 @@
 	<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
 	<PackageReference Include="NunitXml.TestLogger" Version="3.0.107" />
 	<PackageReference Include="RestSharp" Version="110.2.0" />
+	
   </ItemGroup>
-
+	<ItemGroup Condition="'$(UserSecretsId)' != ''">
+		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.0" />
+	</ItemGroup>
+	
   <ItemGroup>
     <ProjectReference Include="..\CloudX.Auto.Core\CloudX.Auto.Core.csproj" />
     <ProjectReference Include="..\CloudX.Auto.Data\CloudX.Auto.AWS.Core.csproj" />
@@ -41,6 +46,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="log4net.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="VPC\vpc_test_data.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

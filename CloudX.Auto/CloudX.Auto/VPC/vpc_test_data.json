@@ -1,0 +1,5 @@
+﻿{
+  "VpcId": "vpc-0eda6180d3a279564",
+  "VpcCidrBlock": "10.0.0.0/16",
+  "VpcTags": "cloudx:qa"
+}
