@@ -10,11 +10,14 @@
   <ItemGroup>
     <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.300" />
     <PackageReference Include="AWSSDK.IdentityManagement" Version="3.7.300.60" />
+    <PackageReference Include="AWSSDK.SecurityToken" Version="3.7.300.76" />
 	<PackageReference Include="NUnit" Version="3.13.2" />
 	<PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
 	<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
 	<PackageReference Include="NunitXml.TestLogger" Version="3.0.107" />
 	<PackageReference Include="RestSharp" Version="110.2.0" />
+	<PackageReference Include="RestSharp.Newtonsoft.Json.Extensions" Version="1.0.4" />
+	<PackageReference Include="SSH.NET" Version="2024.0.0" />
 	
   </ItemGroup>
 	<ItemGroup Condition="'$(UserSecretsId)' != ''">
@@ -48,9 +51,22 @@
     <None Update="log4net.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="S3\cloudxinfo-eu-central-s3.pem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="S3\Resources\s3_test_photo.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="S3\s3_test_data.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="VPC\vpc_test_data.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="S3\Resources\Downloads\" />
   </ItemGroup>
 
 </Project>

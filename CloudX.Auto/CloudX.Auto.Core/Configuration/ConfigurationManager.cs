@@ -30,10 +30,7 @@ namespace CloudX.Auto.Core.Configuration
 
         public static IConfiguration GetConfiguration(string fileName)
         {
-            if (_configuration != null)
-            {
-                return _configuration;
-            }
+         
             try
             {
                 var directory = AppDomain.CurrentDomain.BaseDirectory;

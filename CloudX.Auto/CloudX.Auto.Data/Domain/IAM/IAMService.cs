@@ -126,5 +126,16 @@ namespace CloudX.Auto.AWS.Core.Domain.IAM
 
             return groups;
         }
+
+        public async Task<GetInstanceProfileResponse> GetInstanceProfileAsync(string instanceProfileName)
+        {
+            var instanceProfileResponse = await _iamService.GetInstanceProfileAsync(new GetInstanceProfileRequest
+            {
+                InstanceProfileName = instanceProfileName
+            });
+
+            return instanceProfileResponse;
+
+        }
     }
 }
