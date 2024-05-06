@@ -113,6 +113,16 @@ namespace CloudX.Auto.Core.Utils
             AssertAction("Check that object is null failed", result);
         }
 
+        public static void IsNotNull<T>(T actual, string message = default)
+        {
+            if (!string.IsNullOrEmpty(message))
+            {
+                Logger.Info(message);
+            }
+            var result = actual != null;
+            AssertAction("Check that object is not null failed", result);
+        }
+
         public static void AssertScope(params Action[] executables)
         {
             var failures = executables.Select(executable =>
