@@ -7,5 +7,6 @@
         public const string CloudX_EC2 = "CloudX_EC2";
         public const string CloudX_VPC = "CloudX_VPC";
         public const string CloudX_S3 = "CloudX_S3";
+        public const string CloudX_RDS = "CloudX_RDS";
     }
 }

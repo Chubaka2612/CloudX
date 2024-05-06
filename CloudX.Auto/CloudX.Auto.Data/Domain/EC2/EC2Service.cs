@@ -76,6 +76,13 @@ namespace CloudX.Auto.AWS.Core.Domain.EC2
             return response.SecurityGroups;
         }
 
+        public async Task<List<SecurityGroup>> ListSecurityGroupsAsync()
+        {
+           
+            var response = await _ec2Service.DescribeSecurityGroupsAsync(new DescribeSecurityGroupsRequest ());
+            return response.SecurityGroups;
+        }
+
         public async Task<List<Vpc>> ListVpcsAsync(string vpcId)
         {
             var request = new DescribeVpcsRequest
@@ -87,7 +94,7 @@ namespace CloudX.Auto.AWS.Core.Domain.EC2
             return response.Vpcs;
         }
 
-        public async Task<List<Subnet>> ListVpcSubnetsAsync(string vpcId)
+        public async Task<List<Subnet>> ListSubnetsByVPCIdAsync(string vpcId)
         {
             var request = new DescribeSubnetsRequest
             {
@@ -101,7 +108,7 @@ namespace CloudX.Auto.AWS.Core.Domain.EC2
             return response.Subnets;
         }
 
-        public async Task<List<Subnet>> ListVpcSubnetsByInstanceIdAsync(string instanceId)
+        public async Task<List<Subnet>> ListSubnetsByInstanceIdAsync(string instanceId)
         {
             var describeNetworkInterfacesRequest = new DescribeNetworkInterfacesRequest
             {
@@ -129,7 +136,7 @@ namespace CloudX.Auto.AWS.Core.Domain.EC2
             return describeSubnetsResponse.Subnets;
         }
 
-        public async Task<List<RouteTable>> ListVpcSubnetsRoutTablesAsync(string subnetId)
+        public async Task<List<RouteTable>> ListSubnetsRoutTablesAsync(string subnetId)
         {
             var describeRouteTablesRequest = new DescribeRouteTablesRequest
             {

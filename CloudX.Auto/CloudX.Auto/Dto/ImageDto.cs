@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
+using Newtonsoft.Json;
 
-namespace CloudX.Auto.AWS.Core.Domain.IAM.Dto
+namespace CloudX.Auto.Tests.Dto
 {
     public class ImageDto
     {

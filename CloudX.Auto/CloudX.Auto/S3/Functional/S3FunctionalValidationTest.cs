@@ -1,22 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using CloudX.Auto.AWS.Core.Domain.IAM.Dto;
 using CloudX.Auto.AWS.Core.Domain.S3;
 using CloudX.Auto.Core.Attributes;
 using CloudX.Auto.Core.Configuration;
 using CloudX.Auto.Core.Meta;
 using CloudX.Auto.Core.Utils;
+using CloudX.Auto.Tests.Dto;
+using CloudX.Auto.Tests.Models.TestData;
 using CloudX.Auto.Tests.Steps.S3;
-using CloudX.Auto.Tests.TestData.Model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using RestSharp;
 
-namespace CloudX.Auto.Tests.S3.Deployment
+namespace CloudX.Auto.Tests.S3.Functional
 {
     public class S3FunctionalValidationTest : BaseTest
     {
@@ -73,7 +72,6 @@ namespace CloudX.Auto.Tests.S3.Deployment
                    imageObjectsDto.First(imageDto => imageDto.ObjectKey == s3ObjectKey).LastModified,
                    $"Verify 'LastModified' is correct for s3 object by id: {s3ObjectKey}");
             }
-
         }
 
         [Test]

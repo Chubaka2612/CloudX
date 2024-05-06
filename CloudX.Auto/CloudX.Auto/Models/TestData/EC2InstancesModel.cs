@@ -1,7 +1,6 @@
-﻿using CloudX.Auto.AWS.Core.Domain.IAM.Dto;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace CloudX.Auto.Tests.TestData.Model
+namespace CloudX.Auto.Tests.Models.TestData
 {
     public class EC2InstancesModel
     {

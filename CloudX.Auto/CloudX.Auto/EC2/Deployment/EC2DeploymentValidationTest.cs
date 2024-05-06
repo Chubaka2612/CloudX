@@ -7,7 +7,7 @@ using CloudX.Auto.Core.Attributes;
 using CloudX.Auto.Core.Configuration;
 using CloudX.Auto.Core.Meta;
 using CloudX.Auto.Core.Utils;
-using CloudX.Auto.Tests.TestData.Model;
+using CloudX.Auto.Tests.Models.TestData;
 using NUnit.Framework;
 
 namespace CloudX.Auto.Tests.EC2.Deployment
