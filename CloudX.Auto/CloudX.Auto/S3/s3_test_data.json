@@ -10,7 +10,7 @@
       }
     ]
   },
-  "PublicIP": "35.157.187.90",
+  "PublicIP": "3.68.96.10",
   "FQDN": "ec2-35-157-187-90.eu-central-1.compute.amazonaws.com",
   "AwsUsername": "ec2-user",
   "PrivateKeyFilePath": "S3\\cloudxinfo-eu-central-s3.pem",

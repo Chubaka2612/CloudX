@@ -1,0 +1,31 @@
+﻿{
+  "RDSInstancesModel": {
+    "RDSInstances": [
+      {
+        "Identifier": "cloudximage-databasemysqlinstanced64026b2-uegrnefhl4j9",
+        "Type": "db.t3.micro",
+        "Tags": [ "cloudx:qa" ],
+        "IsMultiAZ": false,
+        "StorageSize": 100,
+        "StorageType": "gp2",
+        "Encryption": false,
+        "DatabaseType": "MySQL",
+        "DatabaseVersion": "8.0.32"
+      }
+    ]
+  },
+  "PublicIP": "3.70.128.151",
+  "BaseApiEndpoint": "/api/image",
+  "MySqlConnectionModel": {
+    "SshServer": "ec2-3-70-128-151.eu-central-1.compute.amazonaws.com",
+    "SshPort": 22,
+    "SshUsername": "ec2-user",
+    "PrivateKeyPath": "RDS\\rds_cloudxinfo-eu-central-1.pem",
+    "MysqlServer": "cloudximage-databasemysqlinstanced64026b2-uegrnefhl4j9.cloyam22ocjh.eu-central-1.rds.amazonaws.com",
+    "MysqlPort": 3306,
+    "Database": "cloudximages",
+    "Username": "mysql_admin",
+    //TODO: move to secrets
+    "Password": "LQY0r5AvPD1s2qNdj9NVbZj5U610AtVN"
+  }
+}

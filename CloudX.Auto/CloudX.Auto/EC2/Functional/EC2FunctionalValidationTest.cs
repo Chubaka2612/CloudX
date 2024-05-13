@@ -1,15 +1,15 @@
 ﻿using System.Linq;
+using CloudX.Auto.AWS.Core.Domain.EC2;
 using CloudX.Auto.Core.Attributes;
 using CloudX.Auto.Core.Configuration;
 using CloudX.Auto.Core.Meta;
-using CloudX.Auto.Tests.TestData.Model;
+using CloudX.Auto.Core.Utils;
+using CloudX.Auto.Tests.Models.TestData;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using RestSharp;
-using CloudX.Auto.AWS.Core.Domain.EC2;
-using CloudX.Auto.Core.Utils;
 
-namespace CloudX.Auto.Tests.EC2.Deployment
+namespace CloudX.Auto.Tests.EC2.Functional
 {
     public class EC2FunctionalValidationTest : BaseTest
     {

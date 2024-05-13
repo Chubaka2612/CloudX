@@ -11,7 +11,6 @@
     <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.300" />
     <PackageReference Include="AWSSDK.IdentityManagement" Version="3.7.300.60" />
     <PackageReference Include="AWSSDK.SecurityToken" Version="3.7.300.76" />
-    <PackageReference Include="MySqlConnector" Version="2.3.7" />
 	<PackageReference Include="NUnit" Version="3.13.2" />
 	<PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
 	<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
@@ -52,15 +51,6 @@
     <None Update="log4net.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="RDS\rds_cloudxinfo-eu-central-1.pem">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="RDS\rds_test_data.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="RDS\Resources\s3_test_photo.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="S3\cloudxinfo-eu-central-s3.pem">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -76,6 +66,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="NewFolder\" />
     <Folder Include="S3\Resources\Downloads\" />
   </ItemGroup>
 

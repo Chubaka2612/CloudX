@@ -51,12 +51,14 @@ namespace CloudX.Auto.Core.Utils
 
         public static void CollectionContains<T>(IList<T> set, IList<T> subSet, string message = default)
         {
-            if (!string.IsNullOrEmpty(message))
-            {
-                Logger.Info(message);
-            }
             var result = subSet.All(i => set.Contains(i));
             AssertAction($"Check that collection '{string.Join(", ", set)}' contains '{string.Join(", ", subSet)}' failed", result);
+
+            if (!string.IsNullOrEmpty(message))
+            {
+                Logger.Info(message + $"\nSet: {set.ToJoinString()}" +
+                            $"\nSubset  : {subSet.ToJoinString()}");
+            }
         }
 
         public static void CollectionNotContains<T>(IList<T> set, IList<T> subSet, string message = default)
@@ -216,6 +218,16 @@ namespace CloudX.Auto.Core.Utils
             return actualString;
         }
 
+        public static void DatesAreEqualWithOffset(DateTimeOffset expectedDate, DateTimeOffset actualDate, int secondsOffset = 120, string message = default)
+        {
+            Logger.Info(message +
+                        $"\nExpected: {expectedDate};" +
+                        $"\nActual  : {actualDate}");
 
+            var difference = Math.Abs(expectedDate.Second - actualDate.Second);
+            var result = difference < secondsOffset;
+
+            AssertAction($"Check that data '{actualDate}' equals to '{expectedDate}' failed", result);
+        }
     }
 }

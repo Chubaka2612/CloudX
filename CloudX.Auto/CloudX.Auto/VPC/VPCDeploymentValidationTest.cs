@@ -7,10 +7,10 @@ using CloudX.Auto.Core.Attributes;
 using CloudX.Auto.Core.Configuration;
 using CloudX.Auto.Core.Meta;
 using CloudX.Auto.Core.Utils;
-using CloudX.Auto.Tests.TestData.Model;
+using CloudX.Auto.Tests.Models.TestData;
 using NUnit.Framework;
 
-namespace CloudX.Auto.Tests.VPC.Deployment
+namespace CloudX.Auto.Tests.VPC
 {
     public class VPCDeploymentValidationTest : BaseTest
     {
@@ -46,7 +46,7 @@ namespace CloudX.Auto.Tests.VPC.Deployment
         [TestCode("CXQA-VPC-01")]
         public async Task VPCShouldHaveCorrectSubnets()
         {
-            var vpcSubnets = (await EC2Service.Instance.ListVpcSubnetsAsync(vpcExpectedId));
+            var vpcSubnets = (await EC2Service.Instance.ListSubnetsByVPCIdAsync(vpcExpectedId));
             AssertHelper.IsTrue(vpcSubnets.Count() == 2, $"Verify subnets for vpc with id {vpcExpectedId} are present");
 
             AssertHelper.AssertScope(
@@ -66,7 +66,7 @@ namespace CloudX.Auto.Tests.VPC.Deployment
             var publicInstanceId = ConfigurationManager.Get<EC2InstancesModel>(nameof(EC2InstancesModel),
               ec2TestDataFilePath).EC2Instances.Where(instance => instance.IsPublic).First().Id;
 
-            var vpcSubnets = await EC2Service.Instance.ListVpcSubnetsByInstanceIdAsync(publicInstanceId);
+            var vpcSubnets = await EC2Service.Instance.ListSubnetsByInstanceIdAsync(publicInstanceId);
 
             AssertHelper.AssertScope(
                 () => AssertHelper.IsTrue(vpcSubnets.Count() == 1, $"Verify the public instance has only 1 subnet"),
@@ -76,7 +76,7 @@ namespace CloudX.Auto.Tests.VPC.Deployment
             // Check the route table associated with the subnet where the EC2 instance is located.
             // If there is a route to the internet(0.0.0.0/0) pointing to an internet gateway,
             // then the EC2 instance has internet access.
-            var routeTables = await EC2Service.Instance.ListVpcSubnetsRoutTablesAsync(vpcSubnets.First().SubnetId);
+            var routeTables = await EC2Service.Instance.ListSubnetsRoutTablesAsync(vpcSubnets.First().SubnetId);
             Route igwRoute = null;
             routeTables.Select(routeTable => routeTable.Routes).ForEach(routs =>
             {
@@ -95,14 +95,14 @@ namespace CloudX.Auto.Tests.VPC.Deployment
             var privateInstanceId =  ConfigurationManager.Get<EC2InstancesModel>(nameof(EC2InstancesModel),
               ec2TestDataFilePath).EC2Instances.Where(instance => !instance.IsPublic).First().Id; ;
 
-            var vpcSubnets = await EC2Service.Instance.ListVpcSubnetsByInstanceIdAsync(privateInstanceId);
+            var vpcSubnets = await EC2Service.Instance.ListSubnetsByInstanceIdAsync(privateInstanceId);
 
             AssertHelper.AssertScope(
                 () => AssertHelper.IsTrue(vpcSubnets.Count() == 1, $"Verify the private instance has only 1 subnet"),
                 () => AssertHelper.IsFalse(vpcSubnets.First().MapPublicIpOnLaunch, $"Verify the private instance has private subnet")
             );
 
-            var routeTables = await EC2Service.Instance.ListVpcSubnetsRoutTablesAsync(vpcSubnets.First().SubnetId);
+            var routeTables = await EC2Service.Instance.ListSubnetsRoutTablesAsync(vpcSubnets.First().SubnetId);
             Route natRoute = null;
             routeTables.Select(routeTable => routeTable.Routes).ForEach(routs =>
             {
