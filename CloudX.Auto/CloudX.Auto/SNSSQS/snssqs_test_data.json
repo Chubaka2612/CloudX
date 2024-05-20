@@ -1,0 +1,22 @@
+﻿{
+  "SnsTopic": {
+    "Name": "cloudximage-TopicSNSTopic",
+    "Type": "standard",
+    "Encryption": false,
+    "Tags": [ "cloudx:qa" ]
+  },
+  "SqsQueue": {
+    "Name": "cloudximage-QueueSQSQueue",
+    "Encryption": true,
+    "Type": "standard",
+    "Tags": [ "cloudx:qa" ],
+    "deadLetterQueue": false
+  },
+  "InboxId": "3aba3c9a-f9a8-4d94-8ace-af8f3c743e76",
+  "Email": "3aba3c9a-f9a8-4d94-8ace-af8f3c743e76@mailslurp.com",
+  "InboxName": "automation@mailslurp.com",
+  "MailslurpApiKey": "25ecd6d205034d7f632809db4bcd876b9cacccb40e6e733854483e9a068d1293",
+  "PublicIP": "52.59.221.94",
+  "BaseImageApiEndpoint": "/api/image",
+  "BaseNotificationApiEndpoint": "/api/notification"
+}

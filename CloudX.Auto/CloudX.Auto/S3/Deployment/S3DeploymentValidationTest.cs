@@ -107,7 +107,7 @@ namespace CloudX.Auto.Tests.S3.Deployment
          
             var response = client.Execute(request);
           
-            AssertHelper.IsTrue(response.IsSuccessful, $"Veriy application {response.ResponseUri} is accessible through FQDN");
+            AssertHelper.IsTrue(response.IsSuccessful, $"Verify application {response.ResponseUri} is accessible through FQDN");
         }
 
 

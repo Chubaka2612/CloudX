@@ -8,5 +8,8 @@
         public const string CloudX_VPC = "CloudX_VPC";
         public const string CloudX_S3 = "CloudX_S3";
         public const string CloudX_RDS = "CloudX_RDS";
+        public const string CloudX_SNS = "CloudX_SNS";
+        public const string CloudX_SQS = "CloudX_SQS";
+        public const string CloudX_SNS_SQS = "CloudX_SNS_SQS";
     }
 }

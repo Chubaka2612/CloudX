@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CloudX.Auto.Core.Attributes;
@@ -11,13 +10,12 @@ using CloudX.Auto.Tests.Models.RDS;
 using CloudX.Auto.Tests.Models.TestData;
 using CloudX.Auto.Tests.Steps.RDS;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using RestSharp;
 
 namespace CloudX.Auto.Tests.RDS.Functional
 {
-    public class RDSFunctionalValidationTest : BaseTest
+    public class RDSFunctionalValidationTest : ImageBaseTest
     {
         private const string RdsTestDataFilePath = "RDS\\rds_test_data.json";
         private const string S3TestDataFilePath = "S3\\s3_test_data.json";
@@ -26,13 +24,14 @@ namespace CloudX.Auto.Tests.RDS.Functional
                RdsTestDataFilePath);
 
         protected string PublicIp = ConfigurationManager.GetConfiguration(RdsTestDataFilePath)["PublicIP"];
-        protected string ApiEndpoint = ConfigurationManager.GetConfiguration(S3TestDataFilePath)["BaseApiEndpoint"];
-        protected RestClient MyRestClient;
+     
         protected MySqlClient MySqlClient;
 
         [SetUp]
         protected void BeforeEach()
         {
+            ImageApiEndpoint = ConfigurationManager.GetConfiguration(S3TestDataFilePath)["BaseApiEndpoint"];
+
             Log.Debug("Initialize Rest client");
             MyRestClient = new RestClient($"http://{PublicIp}");
 
@@ -106,7 +105,7 @@ namespace CloudX.Auto.Tests.RDS.Functional
             ).FirstOrDefault();
 
             //api action
-            var getRequest = new RestRequest($"{ApiEndpoint}/{imageId}");
+            var getRequest = new RestRequest($"{ImageApiEndpoint}/{imageId}");
             var getResponse = MyRestClient.Execute(getRequest);
             var imageDto = JsonConvert.DeserializeObject<ImageDto>(getResponse.Content);
 
@@ -136,7 +135,7 @@ namespace CloudX.Auto.Tests.RDS.Functional
             var imageId = UploadFileViaApi(filePath, imageName, fileNameToUpload);
 
             //api action
-            var deleteRequest = new RestRequest($"{ApiEndpoint}/{imageId}", Method.Delete);
+            var deleteRequest = new RestRequest($"{ImageApiEndpoint}/{imageId}", Method.Delete);
             var deleteResponse = MyRestClient.Execute(deleteRequest);
             AssertHelper.IsTrue(deleteResponse.Content.Contains( "Image is deleted"), "Verify image is deleted via API");
 
@@ -155,21 +154,6 @@ namespace CloudX.Auto.Tests.RDS.Functional
           
             //assert
             AssertHelper.IsNull(imageEntity, $"Verify image with id {imageId} was deleted from DB");
-        }
-
-        private int UploadFileViaApi(string filePath, string imageName, string fileNameToUpload)
-        {
-            var postRequest = new RestRequest(ApiEndpoint, Method.Post)
-            {
-                AlwaysMultipartFormData = true
-            };
-            postRequest.AddHeader("Content-Type", "multipart/form-data");
-            postRequest.AddFile("upfile", () => File.OpenRead(Path.Combine(filePath, imageName)), fileNameToUpload);
-            //obtain id of added image
-            var postResponse = MyRestClient.Execute(postRequest);
-            var imageDto = JsonConvert.DeserializeObject<ImageDto>(postResponse.Content);
-
-            return imageDto.Id;
         }
 
         [TearDown]
