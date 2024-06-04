@@ -11,13 +11,12 @@ using CloudX.Auto.Tests.Dto;
 using CloudX.Auto.Tests.Models.TestData;
 using CloudX.Auto.Tests.Steps.S3;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using RestSharp;
 
 namespace CloudX.Auto.Tests.S3.Functional
 {
-    public class S3FunctionalValidationTest : BaseTest
+    public class S3FunctionalValidationTest : ImageBaseTest
     {
         private const string s3TestDataFilePath = "S3\\s3_test_data.json";
 
@@ -27,14 +26,13 @@ namespace CloudX.Auto.Tests.S3.Functional
         protected string bucketId = $"cloudximage-imagestorebucket{sourceBucket.Id}";
         protected string buckePrefix = ConfigurationManager.GetConfiguration(s3TestDataFilePath)["BuckePrefix"];
         protected string publicIp = ConfigurationManager.GetConfiguration(s3TestDataFilePath)["PublicIP"];
-        protected string apiEndpoint = ConfigurationManager.GetConfiguration(s3TestDataFilePath)["BaseApiEndpoint"];
-        protected RestClient client;
 
         [SetUp]
         protected void BeforeEach()
         {
+            ImageApiEndpoint = ConfigurationManager.GetConfiguration(s3TestDataFilePath)["BaseApiEndpoint"];
             Log.Debug("Initialize Rest client");
-            client = new RestClient($"http://{publicIp}");
+            MyRestClient = new RestClient($"http://{publicIp}");
         }
 
         [Test]
@@ -48,8 +46,8 @@ namespace CloudX.Auto.Tests.S3.Functional
             var s3BucketObjectsList = await S3Service.Instance.ListS3ObjectsByKey(bucketId, buckePrefix);
           
             //api action
-            var getRequest = new RestRequest(apiEndpoint, Method.Get);
-            var getResponse = client.Execute(getRequest);
+            var getRequest = new RestRequest(ImageApiEndpoint, Method.Get);
+            var getResponse = MyRestClient.Execute(getRequest);
             var imageObjectsDto = JsonConvert.DeserializeObject<List<ImageDto>>(getResponse.Content);
             var actualS3ObjectsKeys = s3BucketObjectsList.Select(s3Object => s3Object.Key).ToList();
 
@@ -88,13 +86,13 @@ namespace CloudX.Auto.Tests.S3.Functional
             var s3BucketObjectsListBeforeUpload = await S3Service.Instance.ListS3ObjectsByKey(bucketId, buckePrefix);
 
             //api action
-            var postRequest = new RestRequest(apiEndpoint, Method.Post)
+            var postRequest = new RestRequest(ImageApiEndpoint, Method.Post)
             {
                 AlwaysMultipartFormData = true
             };
             postRequest.AddHeader("Content-Type", "multipart/form-data");
             postRequest.AddFile("upfile", () => File.OpenRead(Path.Combine(filePath, imageName)), fileNameToUpload);
-            var postResponse = client.Execute(postRequest);
+            var postResponse = MyRestClient.Execute(postRequest);
 
             //s3 action
             var s3BucketObjectsListAfterUpload = await S3Service.Instance.ListS3ObjectsByKey(bucketId, buckePrefix);
@@ -118,14 +116,14 @@ namespace CloudX.Auto.Tests.S3.Functional
             var s3BucketObjectsListBeforeUpload = await S3Service.Instance.ListS3ObjectsByKey(bucketId, buckePrefix);
 
             //api action
-            var postRequest = new RestRequest(apiEndpoint, Method.Post)
+            var postRequest = new RestRequest(ImageApiEndpoint, Method.Post)
             {
                 AlwaysMultipartFormData = true
             };
             postRequest.AddHeader("Content-Type", "multipart/form-data");
             postRequest.AddFile("upfile", () => File.OpenRead(Path.Combine(filePath, imageName)), imageName);
-            var postResponse1 = client.Execute(postRequest);//1st POST
-            var postResponse2 = client.Execute(postRequest);//2nd POST with the same parameters
+            var postResponse1 = MyRestClient.Execute(postRequest);//1st POST
+            var postResponse2 = MyRestClient.Execute(postRequest);//2nd POST with the same parameters
             //s3 action
             var s3BucketObjectsListAfterUpload = await S3Service.Instance.ListS3ObjectsByKey(bucketId, buckePrefix);
 
@@ -145,7 +143,7 @@ namespace CloudX.Auto.Tests.S3.Functional
 
             //add test image to be deleted
             //api action
-            string imageIdToDelete = UploadFileViaApi(filePath, imageName, fileNameToUpload);
+            var imageIdToDelete = UploadFileViaApi(filePath, imageName, fileNameToUpload);
 
             //s3 action
             var s3BucketObjectsListBeforeDeletion = await S3Service.Instance.ListS3ObjectsByKey(bucketId, buckePrefix);
@@ -154,8 +152,8 @@ namespace CloudX.Auto.Tests.S3.Functional
             var imageKey = s3BucketObjectsListBeforeDeletion.First(s3Object => s3Object.Key.Contains(fileNameToUpload));
 
             //api action
-            var deleteRequest = new RestRequest($"{apiEndpoint}/{imageIdToDelete}", Method.Delete);
-            var deleteResponse = client.Execute(deleteRequest);
+            var deleteRequest = new RestRequest($"{ImageApiEndpoint}/{imageIdToDelete}", Method.Delete);
+            var deleteResponse = MyRestClient.Execute(deleteRequest);
 
             //s3 action
             var s3BucketObjectsListAfterDeletion = await S3Service.Instance.ListS3ObjectsByKey(bucketId, buckePrefix);
@@ -175,66 +173,23 @@ namespace CloudX.Auto.Tests.S3.Functional
             var imageName = "s3_test_photo.jpg";
             var fileNameToUpload = imageName.Split('.').First() + "_" + RandomStringUtils.RandomString(6) + ".jpg";
             var fileNameDownloaded = imageName.Split('.').First() + "_downloaded_" + RandomStringUtils.RandomString(6) + ".jpg";
-            var sorcesFilePath = "S3/Resources";
-            var downloadedFilePath = Path.Combine(sorcesFilePath, "Downloads");
+            var sourcesFilePath = "S3/Resources";
+            var downloadedFilePath = Path.Combine(sourcesFilePath, "Downloads");
 
             //add test image to be downloaded
             //api action
-            string imageIdToDownload = UploadFileViaApi(sorcesFilePath, imageName, fileNameToUpload);
+            var imageIdToDownload = UploadFileViaApi(sourcesFilePath, imageName, fileNameToUpload);
 
             //api action
-            var getRequest = new RestRequest($"{apiEndpoint}/file/{imageIdToDownload}", Method.Get);
-            var getResponse = client.Execute(getRequest);
+            var getRequest = new RestRequest($"{ImageApiEndpoint}/file/{imageIdToDownload}", Method.Get);
+            var getResponse = MyRestClient.Execute(getRequest);
 
             File.Create(Path.Combine(downloadedFilePath, fileNameDownloaded)).Close();
             File.WriteAllBytes(Path.Combine(downloadedFilePath, fileNameDownloaded), getResponse.RawBytes);
 
-            AssertHelper.IsTrue(FilesEqual(Path.Combine(sorcesFilePath, imageName), Path.Combine(downloadedFilePath, fileNameDownloaded)),
-              $"Veriy downloaded file as expected");
+            AssertHelper.IsTrue(FilesEqual(Path.Combine(sourcesFilePath, imageName), Path.Combine(downloadedFilePath, fileNameDownloaded)),
+              $"Verify downloaded file as expected");
 
-        }
-
-        private string UploadFileViaApi(string filePath, string imageName, string fileNameToUpload)
-        {
-            var postRequest = new RestRequest(apiEndpoint, Method.Post)
-            {
-                AlwaysMultipartFormData = true
-            };
-            postRequest.AddHeader("Content-Type", "multipart/form-data");
-            postRequest.AddFile("upfile", () => File.OpenRead(Path.Combine(filePath, imageName)), fileNameToUpload);
-            //obtain id of added image
-            var postResponse = client.Execute(postRequest);
-            dynamic jsonResponse = JObject.Parse(postResponse.Content);
-
-            return jsonResponse.id;
-        }
-
-        private static bool FilesEqual(string filePath1, string filePath2)
-        {
-            using (var fileStream1 = File.OpenRead(filePath1))
-            using (var fileStream2 = File.OpenRead(filePath2))
-            {
-                if (fileStream1.Length != fileStream2.Length)
-                {
-                    return false;
-                }
-
-                int byte1;
-                int byte2;
-
-                do
-                {
-                    byte1 = fileStream1.ReadByte();
-                    byte2 = fileStream2.ReadByte();
-
-                    if (byte1 != byte2)
-                    {
-                        return false;
-                    }
-                } while (byte1 != -1 && byte2 != -1);
-
-                return true;
-            }
         }
     }
 }
