@@ -1,21 +1,20 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace CloudX.Auto.Tests.Dto
 {
     public class ImageDto
     {
         [JsonProperty("id")]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty("last_modified")]
-        public DateTime LastModified { get; set; }
+        public double LastModified { get; set; }
 
         [JsonProperty("object_key")]
         public string ObjectKey { get; set; }
 
         [JsonProperty("object_size")]
-        public int ObjectSize { get; set; }
+        public double ObjectSize { get; set; }
 
         [JsonProperty("object_type")]
         public string ObjectType { get; set; }

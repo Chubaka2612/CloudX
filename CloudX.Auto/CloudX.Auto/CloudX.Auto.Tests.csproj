@@ -72,6 +72,12 @@
     <None Update="S3\s3_test_data.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="SLESS\Resources\s3_test_photo.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SLESS\sless_test_data.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="SNSSQS\snssqs_test_data.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

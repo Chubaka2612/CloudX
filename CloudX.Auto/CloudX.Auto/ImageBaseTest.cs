@@ -9,7 +9,7 @@ namespace CloudX.Auto.Tests
         protected string ImageApiEndpoint = string.Empty;
         protected RestClient MyRestClient;
 
-        protected int UploadFileViaApi(string filePath, string imageName, string fileNameToUpload)
+        protected T UploadFileViaApi<T>(string filePath, string imageName, string fileNameToUpload)
         {
             var postRequest = new RestRequest(ImageApiEndpoint, Method.Post)
             {

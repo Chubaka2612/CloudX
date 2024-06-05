@@ -51,7 +51,7 @@ namespace CloudX.Auto.Tests.RDS.Functional
             var filePath = "RDS\\Resources";
 
             //api action
-            var imageId = UploadFileViaApi(filePath, imageName, fileNameToUpload);
+            var imageId = UploadFileViaApi<int>(filePath, imageName, fileNameToUpload);
            
             //db action
             var images = MySqlClient.ExecuteReader(
@@ -89,7 +89,7 @@ namespace CloudX.Auto.Tests.RDS.Functional
             var filePath = "RDS\\Resources";
 
             //api action
-            var imageId = UploadFileViaApi(filePath, imageName, fileNameToUpload);
+            var imageId = UploadFileViaApi<int>(filePath, imageName, fileNameToUpload);
 
             //db action
             var imageEntity = MySqlClient.ExecuteReader(
@@ -116,7 +116,7 @@ namespace CloudX.Auto.Tests.RDS.Functional
                 () => AssertHelper.AreEquals(imageEntity.ObjectType, imageDto.ObjectType, "Verify uploaded image 'ObjectType' has the same value as ImageDto"),
                 () => AssertHelper.AreEquals(imageEntity.ObjectSize,  imageDto.ObjectSize,
                     "Verify uploaded image 'ObjectSize' has the same value as ImageDto"),
-                () => AssertHelper.DatesAreEqualWithOffset(imageEntity.LastModified, imageDto.LastModified,
+                () => AssertHelper.DatesAreEqualWithOffset(imageEntity.LastModified, DateTimeOffset.FromUnixTimeMilliseconds((long)imageDto.LastModified).DateTime,
                     message: "Verify uploaded image 'LastModified' time  has the same value as ImageDto")
                 );
         }
@@ -132,7 +132,7 @@ namespace CloudX.Auto.Tests.RDS.Functional
             var filePath = "RDS\\Resources";
 
             //api action
-            var imageId = UploadFileViaApi(filePath, imageName, fileNameToUpload);
+            var imageId = UploadFileViaApi<int>(filePath, imageName, fileNameToUpload);
 
             //api action
             var deleteRequest = new RestRequest($"{ImageApiEndpoint}/{imageId}", Method.Delete);

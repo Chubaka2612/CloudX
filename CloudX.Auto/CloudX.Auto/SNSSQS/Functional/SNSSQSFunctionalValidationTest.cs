@@ -124,7 +124,7 @@ namespace CloudX.Auto.Tests.SNSSQS.Functional
             ConfirmSubscriptionViaConfirmationUrlSentByEmail(email.Body);
 
             //api action: upload image and get imageDto for further verification
-            var imageId = UploadFileViaApi(filePath, imageName, fileNameToUpload);
+            var imageId = UploadFileViaApi<string>(filePath, imageName, fileNameToUpload);
             var getRequest = new RestRequest($"{ImageApiEndpoint}/{imageId}");
             var getResponse = MyRestClient.Execute(getRequest);
             var imageDto = JsonConvert.DeserializeObject<ImageDto>(getResponse.Content);
@@ -160,7 +160,7 @@ namespace CloudX.Auto.Tests.SNSSQS.Functional
             ConfirmSubscriptionViaConfirmationUrlSentByEmail(email.Body);
 
             //api action: upload image and get imageDto for further deletion
-            var imageId = UploadFileViaApi(filePath, imageName, fileNameToUpload);
+            var imageId = UploadFileViaApi<string>(filePath, imageName, fileNameToUpload);
             var getRequest = new RestRequest($"{ImageApiEndpoint}/{imageId}");
             var getResponse = MyRestClient.Execute(getRequest);
             var imageDto = JsonConvert.DeserializeObject<ImageDto>(getResponse.Content);
@@ -202,7 +202,7 @@ namespace CloudX.Auto.Tests.SNSSQS.Functional
             ConfirmSubscriptionViaConfirmationUrlSentByEmail(email.Body);
 
             //api action: upload image for further downloading from notification
-            UploadFileViaApi(sourcesFilePath, imageName, fileNameToUpload);
+            UploadFileViaApi<string>(sourcesFilePath, imageName, fileNameToUpload);
 
             //the notification contains link for downloading image
             var emailWithEvent = MailslurpClient.GetLatestEmailByInbox(Guid.Parse(InboxId),
@@ -263,7 +263,7 @@ namespace CloudX.Auto.Tests.SNSSQS.Functional
             //api action: trigger event (upload image) to check no further notification sending is occured for unsubscribed user
             MailslurpClient.DeleteAllInboxEmails(Guid.Parse(InboxId));//delete ll present emails in inbox
             
-            UploadFileViaApi(filePath, imageName, fileNameToUpload); 
+            UploadFileViaApi<string>(filePath, imageName, fileNameToUpload); 
             
             //email action: check that the user did not receive a notification
             var actualEmailsCount = MailslurpClient.GetInboxEmailCount(Guid.Parse(InboxId));

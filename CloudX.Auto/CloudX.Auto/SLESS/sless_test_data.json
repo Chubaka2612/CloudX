@@ -1,0 +1,19 @@
+﻿{
+  "DynamoDb": {
+    "Name": "cloudxserverless-DatabaseImagesTable",
+    "SecondaryIndexEnabled": false,
+    "ReadCapacityUnits": 5,
+    "WriteCapacityUnits": 1,
+    "TimeToLive": "DISABLED",
+    "Tags": [ "cloudx:qa" ]
+  },
+
+  "LambdaConfiguration": {
+    "Memory": 128,
+    "EphemeralStorage": 512,
+    "Timeout": 3,
+    "Tags": ["cloudx:qa"]
+  },
+  "PublicIP": "3.120.134.162",
+  "BaseImageApiEndpoint": "/api/image"
+}

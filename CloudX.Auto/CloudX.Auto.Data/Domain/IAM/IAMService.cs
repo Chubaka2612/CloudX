@@ -5,6 +5,7 @@ using Amazon.IdentityManagement;
 using Amazon.IdentityManagement.Model;
 using Amazon.Runtime;
 using CloudX.Auto.Core.Configuration;
+using System.Linq;
 
 namespace CloudX.Auto.AWS.Core.Domain.IAM
 {
@@ -90,8 +91,13 @@ namespace CloudX.Auto.AWS.Core.Domain.IAM
 
         public async Task<List<AttachedPolicyType>> ListAttachedRolePoliciesAsync(string roleName)
         {
+            //Get full name of the role
+            var listRolesResponse = await _iamService.ListRolesAsync(new ListRolesRequest());
+            var roles = listRolesResponse.Roles;
+            var role = roles.FirstOrDefault(r => r.RoleName.Contains(roleName));
+
             var attachedPolicies = new List<AttachedPolicyType>();
-            var attachedRolePoliciesPaginator = _iamService.Paginators.ListAttachedRolePolicies(new ListAttachedRolePoliciesRequest { RoleName = roleName });
+            var attachedRolePoliciesPaginator = _iamService.Paginators.ListAttachedRolePolicies(new ListAttachedRolePoliciesRequest { RoleName = role.RoleName });
 
             await foreach (var response in attachedRolePoliciesPaginator.Responses)
             {
@@ -99,6 +105,25 @@ namespace CloudX.Auto.AWS.Core.Domain.IAM
             }
 
             return attachedPolicies;
+        }
+
+        public async Task<List<string>> ListInlineRolePoliciesAsync(string roleName)
+        {
+            var listRolesResponse = await _iamService.ListRolesAsync(new ListRolesRequest());
+            var roles = listRolesResponse.Roles;
+            var role = roles.FirstOrDefault(r => r.RoleName.Contains(roleName));
+
+            var policies = new List<string>();
+            var rolePolicies=  _iamService.Paginators.ListRolePolicies(new ListRolePoliciesRequest() { RoleName = role.RoleName }).PolicyNames;
+
+            await foreach (var rolePolicy in rolePolicies)
+            {
+                var policy = await _iamService.GetRolePolicyAsync(new GetRolePolicyRequest()
+                    { PolicyName = rolePolicy, RoleName = role.RoleName });
+                policies.Add(HttpUtility.UrlDecode(policy.PolicyDocument));
+            }
+
+            return policies;
         }
 
         public async Task<List<AttachedPolicyType>> ListAttachedGroupPoliciesAsync(string groupName)
