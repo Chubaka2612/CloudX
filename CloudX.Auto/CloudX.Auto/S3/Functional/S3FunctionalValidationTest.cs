@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -67,7 +68,7 @@ namespace CloudX.Auto.Tests.S3.Functional
                    $"Verify 'ObjectSize' is correct for s3 object by id: {s3ObjectKey}");
 
                 AssertHelper.AreEquals(S3Service.Instance.ListS3ObjectsMetaDataByKey(bucketId, s3ObjectKey).Result.LastModified,
-                   imageObjectsDto.First(imageDto => imageDto.ObjectKey == s3ObjectKey).LastModified,
+                    DateTimeOffset.FromUnixTimeMilliseconds((long)imageObjectsDto.First(imageDto => imageDto.ObjectKey == s3ObjectKey).LastModified),
                    $"Verify 'LastModified' is correct for s3 object by id: {s3ObjectKey}");
             }
         }
@@ -143,7 +144,7 @@ namespace CloudX.Auto.Tests.S3.Functional
 
             //add test image to be deleted
             //api action
-            var imageIdToDelete = UploadFileViaApi(filePath, imageName, fileNameToUpload);
+            var imageIdToDelete = UploadFileViaApi<int>(filePath, imageName, fileNameToUpload);
 
             //s3 action
             var s3BucketObjectsListBeforeDeletion = await S3Service.Instance.ListS3ObjectsByKey(bucketId, buckePrefix);
@@ -178,7 +179,7 @@ namespace CloudX.Auto.Tests.S3.Functional
 
             //add test image to be downloaded
             //api action
-            var imageIdToDownload = UploadFileViaApi(sourcesFilePath, imageName, fileNameToUpload);
+            var imageIdToDownload = UploadFileViaApi<int>(sourcesFilePath, imageName, fileNameToUpload);
 
             //api action
             var getRequest = new RestRequest($"{ImageApiEndpoint}/file/{imageIdToDownload}", Method.Get);

@@ -20,7 +20,8 @@ namespace CloudX.Auto.AWS.Core.Domain.IAM.Dto
         public List<string> Action { get; set; }
 
         [JsonProperty("Resource")]
-        public string Resource { get; set; }
+        [JsonConverter(typeof(StringToListOfStringConverter))]
+        public List<string> Resource { get; set; }
 
         [JsonProperty("Effect")]
         public string Effect { get; set; }

@@ -72,7 +72,7 @@ namespace CloudX.Auto.Tests.IAM.Policy
             var policyDocJson = await IAMService.Instance.GetPolicyDocumentJsonAsync(policy.Arn, version);
             var policyDocDto = CommonUtils.PopulateFromJson<PolicyDocumentDto>(policyDocJson);
 
-            AssertHelper.AreEquals(policyDocDto.Statement.First().Resource, expectedPolicyTestDataModel.Resource,
+            AssertHelper.AreEquals(policyDocDto.Statement.First().Resource.First(), expectedPolicyTestDataModel.Resource,
                 $"Verify '{expectedPolicyTestDataModel.Name}' has correct 'Resource' value");
         }
 

@@ -227,6 +227,22 @@ namespace CloudX.Auto.Core.Utils
             AssertAction($"Check that data '{actualDate}' equals to '{expectedDate}' failed", result);
         }
 
+        public static void NumbersAreEqualWithOffset<T>(T expectedNumber, T actualNumber, int offset = 120, string message = default)
+        {
+            Logger.Info(message +
+                        $"\nExpected: {expectedNumber};" +
+                        $"\nActual  : {actualNumber}");
+
+            if (!typeof(T).IsNumeric())
+            {
+                throw new ArgumentException("The type of numbers must be numeric.");
+            }
+
+            dynamic difference = Math.Abs(Convert.ToDouble(expectedNumber) - Convert.ToDouble(actualNumber));
+            dynamic result = difference < offset;
+
+            AssertAction($"Check that number '{actualNumber}' equals to '{expectedNumber}' failed", result);
+        }
 
     }
 }

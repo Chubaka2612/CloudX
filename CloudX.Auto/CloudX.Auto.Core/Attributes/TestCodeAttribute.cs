@@ -2,7 +2,7 @@
 
 namespace CloudX.Auto.Core.Attributes
 {
-    [AttributeUsage(AttributeTargets.Method, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = true)]
     public class TestCodeAttribute : Attribute
     {
         public string Code { get; }

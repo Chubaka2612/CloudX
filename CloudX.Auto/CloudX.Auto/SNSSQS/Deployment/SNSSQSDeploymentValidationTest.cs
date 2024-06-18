@@ -28,6 +28,7 @@ namespace CloudX.Auto.Tests.SNSSQS.Deployment
         [Component(ComponentName.CloudX_SNS)]
         [Category(TestType.Regression)]
         [TestCode("CXQA-SNSSQS-01")]
+        [TestCode("CXQA-SLESS-03")]
         public async Task ApplicationInstanceRequirementsShouldBeCorrect()
         {
             var publicIp = ConfigurationManager.GetConfiguration(SnsSqsTestDataFilePath)["PublicIP"];
@@ -41,10 +42,10 @@ namespace CloudX.Auto.Tests.SNSSQS.Deployment
             var snsTopic = (await SNSService.Instance.ListTopicsAsync()).Topics.FirstOrDefault(topic => topic.TopicArn.Contains(SourceSnsTopic.Name))
                            ?? throw new Exception($"No SNS Topics with name '{SourceSnsTopic.Name}'");
 
-            //Verify te application uses an SNS topic to subscribe and unsubscribe users, list existing subscriptions, and send e-mail
+            //Verify the application uses an SNS topic to subscribe and unsubscribe users, list existing subscriptions, and send e-mail
             //messages to subscribers 
-            VerifyPolicyActions(iamRoleName, "cloudximage-TopicPublishPolicy", new List<string>{"sns:Publish"}, snsTopic.TopicArn);
-            VerifyPolicyActions(iamRoleName, "cloudximage-TopicSubscriptionPolicy",
+            VerifyPolicyActions(iamRoleName, "cloudxserverless-TopicPublishPolicy", new List<string>{"sns:Publish"}, snsTopic.TopicArn);
+            VerifyPolicyActions(iamRoleName, "cloudxserverless-TopicSubscriptionPolicy",
                 new List<string> { "sns:ListSubscriptions*", "sns:Subscribe", "sns:Unsubscribe" }, snsTopic.TopicArn);
         }
 
@@ -98,6 +99,7 @@ namespace CloudX.Auto.Tests.SNSSQS.Deployment
         [Component(ComponentName.CloudX_SQS)]
         [Category(TestType.Regression)]
         [TestCode("CXQA-SNSSQS-03")]
+        [TestCode("CXQA-SLESS-04")]
         public async Task SQSQueueRequirementsShouldBeCorrect()
         {
             //Check if SQS queue exists with specific name
