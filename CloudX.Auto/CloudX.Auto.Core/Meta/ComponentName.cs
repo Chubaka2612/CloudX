@@ -12,5 +12,6 @@
         public const string CloudX_SQS = "CloudX_SQS";
         public const string CloudX_SNS_SQS = "CloudX_SNS_SQS";
         public const string CloudX_SLESS = "CloudX_SLESS";
+        public const string CloudX_MON = "CloudX_MON";
     }
 }

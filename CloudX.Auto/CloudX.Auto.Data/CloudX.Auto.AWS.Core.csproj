@@ -5,6 +5,8 @@
   </PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="AWSSDK.CloudTrail" Version="3.7.305.7" />
+		<PackageReference Include="AWSSDK.CloudWatch" Version="3.7.304.31" />
 		<PackageReference Include="AWSSDK.CloudWatchLogs" Version="3.7.305.41" />
 		<PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.303.17" />
 		<PackageReference Include="AWSSDK.EC2" Version="3.7.322.1" />

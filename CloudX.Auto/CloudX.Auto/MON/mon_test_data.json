@@ -1,0 +1,13 @@
+﻿{
+  "Trail": {
+    "Name": "cloudxserverless-Trail",
+    "MultRegion": true,
+    "LogFileValidation": true,
+    "SSEKMSEncryption": false,
+    "Tags": [ "cloudx:qa" ]
+  },
+
+  "PublicIP": "54.93.190.185",
+  "InstaneId": "i-0da344b1850bcd36b",
+  "BaseImageApiEndpoint": "/api/image"
+}

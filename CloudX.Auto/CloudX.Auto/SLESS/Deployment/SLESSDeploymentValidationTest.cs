@@ -199,7 +199,7 @@ namespace CloudX.Auto.Tests.SLESS.Deployment
                         mapping.EventSourceArn.Contains("cloudxserverless-QueueSQSQueue")),
                     "Verify Lambda Trigger: SQS Queue"),
                 () => AssertHelper.IsNotNull(
-                    CloudWatchService.Instance.GetCloudWatchLogGroupAsync(
+                    CloudWatchLogsService.Instance().GetCloudWatchLogGroupAsync(
                         "/aws/lambda/cloudxserverless-EventHandlerLambda"),
                     "Verify Lambda application logs are stored in CloudWatch log group ")
             );
