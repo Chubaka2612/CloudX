@@ -54,6 +54,9 @@
     <None Update="log4net.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="MON\mon_test_data.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="RDS\rds_cloudxinfo-eu-central-1.pem">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

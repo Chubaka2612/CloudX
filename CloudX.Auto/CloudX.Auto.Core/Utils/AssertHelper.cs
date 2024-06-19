@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using CloudX.Auto.Core.Extensions;
 using AssertionException = CloudX.Auto.Core.Exceptions.AssertionException;
+using System.Diagnostics;
+using System.Threading;
 
 namespace CloudX.Auto.Core.Utils
 {
@@ -242,6 +244,38 @@ namespace CloudX.Auto.Core.Utils
             dynamic result = difference < offset;
 
             AssertAction($"Check that number '{actualNumber}' equals to '{expectedNumber}' failed", result);
+        }
+
+
+        public static void BecomesEqual(object expected, Func<object> actualFunc, string businessContext, TimeSpan defaultWait, TimeSpan defaultPolling)
+        {
+            PollingAssertBecomes("AreEquals", actualFunc, new[] { expected, businessContext }, defaultWait, defaultPolling);
+        }
+    
+        private static void PollingAssertBecomes<T>(string assertMethodName, Func<T> actualFunc, object[] args, TimeSpan defaultWait, TimeSpan defaultPolling)
+        {
+            var assertMethod = typeof(AssertHelper).GetMethods()
+                .First(m => string.Equals(m.Name, assertMethodName, StringComparison.OrdinalIgnoreCase) && m.IsGenericMethod)
+                .MakeGenericMethod(typeof(object));
+            var timer = new Stopwatch();
+            timer.Start();
+            while (defaultWait > timer.Elapsed)
+            {
+                try
+                {
+                    var actualResult = actualFunc();
+                    var totalArgs = args.ToList();
+                    totalArgs.Insert(args.Length - 1, actualResult);
+                    assertMethod.Invoke(null, totalArgs.ToArray());
+                }
+                catch (Exception)
+                {
+                    Thread.Sleep(defaultPolling);
+                    continue;
+                }
+                return;
+            }
+            ThrowFail($"While verifying step '{args.Last()}', timeout ({defaultWait.TotalSeconds} sec) exceeded");
         }
 
     }
